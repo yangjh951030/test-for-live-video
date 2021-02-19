@@ -1,0 +1,84 @@
+* {
+    box-sizing: border-box;
+}
+
+::-webkit-scrollbar{
+    width: 5px;
+    height: 5px;
+    border-radius: 2px;
+    background-color: goldenrod;
+}
+
+::-webkit-scrollbar-thumb{
+    width: 5px;
+    border-radius: 2px;
+    background-color: gray;
+}
+::-webkit-scrollbar-track{
+    width: 5px ;
+    background-color: goldenrod;
+}
+body{
+    position: relative; /*  预防我不爱写的时候基于body定位*/
+    width: calc(100vw-20px);
+    height: calc(100vh - 20px);
+    overflow: auto;
+}
+.video-content{
+    position: absolute;
+    left: 15%;
+    top:5px;
+    width: 50%;
+    height: calc(100vh - 30px);
+    min-height: 500px;
+    padding: 5px;
+    background-color: green;
+}
+#host-video{
+    position: relative;
+    left: 0px;
+    top:0px;
+    width: 100%;
+    height: 70%;
+    border-radius: 5px;
+    border: 2px solid black;
+    background-color: black;
+    transform: rotateY(180deg);
+}
+.host-operation-content{
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    left: 0px;
+    top:0px;
+    width: 100%;
+    height: 28%;
+    padding: 5px;
+    background-color: blueviolet;
+}
+.host-operation-content button{
+    width: 10vw;
+    height: 10vw;
+    margin:10px 10px 10px 10px;
+    border-radius: 50%;
+    box-shadow: -5px 0px 5px black , 5px 0px 5px black,0px 5px 5px black,0px -5px 5px black;
+    outline: none;
+    border: none;
+}
+#startBtn{
+    background-color: green;
+}
+#closeBtn{
+    background-color: red;
+}
+#message-content{
+    position: absolute;
+    right: 15%;
+    top:5px;
+    width: 20%;
+    height: calc(100vh - 30px);
+    min-height: 500px;
+    padding: 5px;
+    background-color: blue;
+}

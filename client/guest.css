@@ -1,0 +1,102 @@
+*{
+    box-sizing: border-box;
+}
+
+::-webkit-scrollbar{
+    width: 5px;
+    height: 5px;
+    border-radius: 2px;
+    background-color: goldenrod;
+}
+
+::-webkit-scrollbar-thumb{
+    width: 5px;
+    border-radius: 2px;
+    background-color: gray;
+}
+::-webkit-scrollbar-track{
+    width: 5px ;
+    background-color: goldenrod;
+}
+body{
+    position: relative; /*  预防我不爱写的时候基于body定位*/
+    width: calc(100vw-20px);
+    height: calc(100vh - 20px);
+    display: flex;
+    overflow: auto;
+}
+#roomsContent{
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+    height: 100%;
+    padding: 5px;
+    background-color: blue;
+}
+#roomsContent div{
+    width: 100%;
+    height: 100px;
+    margin-top: 5px;
+    background-color: black;
+    color: white;
+    border: 1px solid white;
+}
+.videoContent{
+    flex: 1;
+    background: brown;
+    height: 100%;
+}
+.remoteVideo{
+    position: relative;
+    width: 100%;
+    height: 70%;
+    padding: 5px;
+    background-color: cadetblue;
+}
+#remoteVideo{
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    border: cornsilk 2px solid;
+}
+.operateContent{
+    width: 300px;
+    height: 100%;
+    padding: 5px;
+    background-color: chartreuse;
+}
+#messageContent{
+    position: relative;
+    width: 100%;
+    height: 80%;
+    padding: 5px;
+    background-color: blue;
+}
+.sendMessage{
+    position: relative;
+    width: 100%;
+    top:1%;
+    height: 19%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.sendMessage *{
+    margin:5px;
+    outline: none;
+    box-shadow: 0px 0px 8px black;
+}
+.sendMessage input{
+    padding: 4px;
+    border: none;
+}
+.sendMessage button{
+    border: none;
+    padding: 4px;
+    cursor: pointer;
+    background-color: green;
+}
+.sendMessage button:hover{
+    background-color: rgb(21, 192, 21);
+}

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>xx</title>
+    </head>
+    <body>
+        <video id="local-video" >您的浏览器不支持video</video>
+        <video id="test-video" controls autoplay > 您的浏览器不支持video</video>
+        <button onclick="start()">录屏</button>
+        <button onclick="stop()">停止</button>
+        <button onclick="loading()">loading</button>
+    </body>
+</html>
+<script>
+    let localVideo = document.getElementById('local-video');
+    let testVideo =  document.getElementById('test-video');
+    let recorder;
+    let videoBlob = [];
+    let sourceBuffer;
+    let mediaSource;
+    function start(){
+        navigator.mediaDevices.getUserMedia({audio:false,video:true})
+        .then(function(mediaStream){
+            localVideo.srcObject = mediaStream;
+            localVideo.onloadedmetadata =  function(){
+                localVideo.play();
+            }
+            recorder  = new MediaRecorder(mediaStream,{type:'video/webm; codecs="vorbis, vp8"'});
+            recorder.ondataavailable  =  function(e){
+                videoBlob.push(e.data);
+                console.log('收到一个blob');
+            }
+            recorder.onstop = function(e){
+                let blob = new Blob(videoBlob, { type : 'video/webm; codecs="vorbis, vp8"' });
+                downloadMp4(blob);
+                videoBlob = [];
+            }
+            recorder.start();
+        }).catch(function(e){
+            console.log(e);
+        })
+    }
+    function stop(){
+        recorder.stop();
+    }
+    function downloadMp4(blob){
+        let url = window.URL.createObjectURL(blob);
+        let link = document.createElement('a');
+        link.style.display = 'none';
+        link.href = url ;
+        link.setAttribute('download', './1.webm' );
+        document.body.appendChild(link);
+        link.click();
+        // 然后移除
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    }
+    function loading(){
+        mediaSource = new MediaSource();
+        testVideo.src = URL.createObjectURL(mediaSource);
+         // ffmpeg -i non_fragmented.mp4 -movflags frag_keyframe+empty_moov fragmented.mp4
+        mediaSource.addEventListener('sourceopen',function(e){
+            let config = 'video/webm; codecs="vorbis, vp8"';
+            let noConfig = 'video/mp4; codecs="avc1.42E01E, mp4a.40.2"';
+           // console.log(MediaSource.isTypeSupported(noConfig));
+            if (mediaSource.sourceBuffers.length == 0) {
+                sourceBuffer = mediaSource.addSourceBuffer(noConfig);
+            }
+            sourceBuffer.addEventListener('updateend', function (_) {
+                mediaSource.endOfStream();
+                // testVideo.onloadedmetadata =  function(){
+                //     testVideo.play();
+                // }
+                console.log(sourceBuffer);
+                console.log(testVideo.duration);
+                sourceBuffer.timestampOffset = testVideo.duration; // 设置这个就ok了？
+                if(sourceBuffer.updating === false){
+                    status ++;
+                    console.log(status);
+                    getVideo();
+                }
+                //sourceBuffer.appendBuffer(queue.shift());
+            });
+            sourceBuffer.addEventListener('error',function(_){
+                console.log('出错')
+            })
+            getVideo();
+        //console.log(sourceBuffer);
+        })
+    }
+let status = 1;
+let queue = [];
+let timer;
+
+testVideo.addEventListener('play',function(){
+    //getVideo();
+})
+testVideo.addEventListener('ended',function(){
+    console.log(queue);
+})
+function getVideo() {
+    if(status > 6){
+        return
+    }
+    let xml = new XMLHttpRequest();
+    let url =  './video'+ status + '.mp4';
+    xml.open('get',url);
+    xml.responseType = 'arraybuffer';
+    xml.onload =  function(){
+       // queue.push(this.response);
+        if(sourceBuffer.updating === false){
+            sourceBuffer.appendBuffer(this.response);
+        }else{
+            console.log(url + '没有被append')
+        }
+        
+    }
+    xml.onerror =  function(e){
+        console.log(e);
+    }
+    xml.send();
+}
+</script>
